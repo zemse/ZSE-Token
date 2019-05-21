@@ -37,6 +37,15 @@ contract('ZseToken', accounts => {
     assert.equal(initial0 - final0, final1 - initial1);
     assert.equal(initial0 - final0, 100);
   });
+  it('transfer: fires an event', async() => {
+    const receipt = await instance.transfer(accounts[1], 100);
+    assert.equal(receipt.logs.length, 1, 'triggers an event');
+    assert.equal(receipt.logs[0].event, 'Transfer', 'should be the Transfer event');
+    assert.equal(receipt.logs[0].args._from, accounts[0], 'logs the sender');
+    assert.equal(receipt.logs[0].args._to, accounts[1], 'logs the receiver');
+    assert.equal(receipt.logs[0].args._value, 100, 'logs the value');
+
+  });
   it('transfer: throws an error if insufficient balance', async() => {
     try {
       // await instance.transfer(accounts[2], 100, {from: accounts[1]});
